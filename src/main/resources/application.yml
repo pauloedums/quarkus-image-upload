@@ -1,0 +1,26 @@
+quarkus:
+
+  swagger-ui:
+    theme: material
+    always-include: true
+
+  live-reload:
+    instrumentation: true
+
+  http:
+    port: ${PORT:8080}
+  
+  smallrye-openapi:
+    path: /swagger
+  
+  datasource:
+    db-kind: postgresql
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
+    jdbc:
+      url: ${JDBC_DATABASE_URL}
+
+  hibernate-orm:
+    database:
+      generation: 
+        ~: drop-and-create
