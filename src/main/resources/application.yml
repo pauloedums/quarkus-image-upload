@@ -8,7 +8,7 @@ quarkus:
     instrumentation: true
 
   http:
-    port: 8080
+    port: ${PORT:8080}
   
   smallrye-openapi:
     path: /swagger
