@@ -48,9 +48,10 @@ public class ImageUploadResource {
         @MultipartForm PetRequestBody petRequestBody) throws IOException {
         
         PetRequestDTO petRequestDTO = imageUploadService.createRequest(petRequestBody);
-        PetResponseDTO petResponseDTO = imageUploadService.createResponse(petRequestDTO);
 
         petImageRepository.persist(petRequestDTO);
+        
+        PetResponseDTO petResponseDTO = imageUploadService.createResponse(petRequestDTO);
         
         return petImageRepository
                 .findByIdOptional(petRequestDTO.getId())
