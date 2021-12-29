@@ -6,6 +6,7 @@ import java.util.Base64;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -25,7 +26,6 @@ import br.com.petmach.resources.PetImageResource;
 
 
 @Path("/image")
-@Produces(MediaType.APPLICATION_JSON)
 public class ImageUploadResource {
 
     @Inject
@@ -38,6 +38,7 @@ public class ImageUploadResource {
     @Transactional
     @Path("/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response uploadFile(
         @MultipartForm PetRequestBody petRequestBody) throws IOException {
         
@@ -66,9 +67,33 @@ public class ImageUploadResource {
         return Response.ok(petResponseDTO).build();
     }
 
+    @GET
+    @Path("/download/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response downloadFile(
+        @PathParam("id") Long id) throws IOException {
+        
+        PetRequestDTO petRequestDTO = petImageRepository.findById(id);
+
+        if(!petImageRepository.isPersistent(petRequestDTO)){
+            return Response.ok(Response.Status.BAD_REQUEST).build();
+        }
+
+        PetResponseDTO petResponseDTO = new PetResponseDTO();
+
+        String decodedMime = Base64.getEncoder().encodeToString(petRequestDTO.getFile());
+
+        petResponseDTO.setId(petRequestDTO.getId());
+        petResponseDTO.setFile(decodedMime);
+        petResponseDTO.setFileName(petRequestDTO.getFileName());
+        petResponseDTO.setFileExtension(petRequestDTO.getFileExtension());
+
+        return Response.ok(petResponseDTO).build();
+    }
 
     @PUT
     @Path("/update/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response updateFile(
         @PathParam("id") Long id,
@@ -100,28 +125,20 @@ public class ImageUploadResource {
         return Response.ok(petResponseDTO).build();
     }
 
-
-    @GET
-    @Path("/download/{id}")
-    public Response downloadFile(
+    @DELETE
+    @Path("/delete/{id}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String deleteFile(
         @PathParam("id") Long id) throws IOException {
         
-        PetRequestDTO petRequestDTO = petImageRepository.findById(id);
-
-        if(!petImageRepository.isPersistent(petRequestDTO)){
-            return Response.ok(Response.Status.BAD_REQUEST).build();
+        if(petImageResource.get(id).getId() == null){
+            return "Esta imagem não existe";
         }
+        
+        petImageRepository.deleteById(id);
 
-        PetResponseDTO petResponseDTO = new PetResponseDTO();
-
-        String decodedMime = Base64.getEncoder().encodeToString(petRequestDTO.getFile());
-
-        petResponseDTO.setId(petRequestDTO.getId());
-        petResponseDTO.setFile(decodedMime);
-        petResponseDTO.setFileName(petRequestDTO.getFileName());
-        petResponseDTO.setFileExtension(petRequestDTO.getFileExtension());
-
-        return Response.ok(petResponseDTO).build();
+        return "Imagem deletada com sucesso!";
     }
+    
 
 }
