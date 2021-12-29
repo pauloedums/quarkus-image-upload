@@ -1,7 +1,6 @@
 package br.com.petmach;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.Base64;
 
 import javax.inject.Inject;
@@ -56,6 +55,7 @@ public class ImageUploadResource {
 
         petImageRepository.persist(petRequestDTO);
 
+        petResponseDTO.setId(petRequestDTO.getId());
         petResponseDTO.setFile(encodedMime);
         petResponseDTO.setFileName(petRequestBody.getFileName());
         petResponseDTO.setFileExtension(petRequestBody.getFileExtension());
@@ -63,7 +63,7 @@ public class ImageUploadResource {
         if(!petImageRepository.isPersistent(petRequestDTO)){
             return Response.ok(Response.Status.BAD_REQUEST).build();
         }
-        return Response.created(URI.create("/download/" + petRequestDTO.getId())).build();
+        return Response.ok(petResponseDTO).build();
     }
 
 
@@ -92,6 +92,7 @@ public class ImageUploadResource {
 
         String decodedMime = Base64.getEncoder().encodeToString(petRequestDTO.getFile());
 
+        petResponseDTO.setId(petRequestDTO.getId());
         petResponseDTO.setFile(decodedMime);
         petResponseDTO.setFileName(petRequestDTO.getFileName());
         petResponseDTO.setFileExtension(petRequestDTO.getFileExtension());
@@ -115,6 +116,7 @@ public class ImageUploadResource {
 
         String decodedMime = Base64.getEncoder().encodeToString(petRequestDTO.getFile());
 
+        petResponseDTO.setId(petRequestDTO.getId());
         petResponseDTO.setFile(decodedMime);
         petResponseDTO.setFileName(petRequestDTO.getFileName());
         petResponseDTO.setFileExtension(petRequestDTO.getFileExtension());

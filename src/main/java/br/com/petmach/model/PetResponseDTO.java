@@ -2,6 +2,8 @@ package br.com.petmach.model;
 
 public class PetResponseDTO {
     
+    private Long id;
+
     private String file;
 
     private String fileName;
@@ -30,6 +32,14 @@ public class PetResponseDTO {
 
     public void setFileExtension(String fileExtension) {
         this.fileExtension = fileExtension;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     
