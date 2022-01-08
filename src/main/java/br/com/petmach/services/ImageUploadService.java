@@ -36,11 +36,11 @@ public class ImageUploadService {
         PetRequestDTO petRequestDTO = new PetRequestDTO();
 
         byte[] fileContent = petRequestBody.getFile().readAllBytes();
-        byte[] encodedAsBytes = Base64.getMimeEncoder().encode(fileContent);
+        byte[] encodedAsBytes = Base64.getEncoder().encode(fileContent);
 
-        byte[] compressed = compress(encodedAsBytes);
+        // byte[] compressed = compress(encodedAsBytes);
                 
-        petRequestDTO.setFile(compressed);
+        petRequestDTO.setFile(encodedAsBytes);
         petRequestDTO.setFileName(petRequestBody.getFileName());
         petRequestDTO.setFileExtension(petRequestBody.getFileExtension());
 
