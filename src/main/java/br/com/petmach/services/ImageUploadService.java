@@ -27,7 +27,6 @@ public class ImageUploadService {
 
         String imageFile = new String("data:image/"+ petRequestDTO.getFileExtension() +";base64," + decoded);
         
-        System.out.println(imageFile);
         petResponseDTO.setId(petRequestDTO.getId());
         petResponseDTO.setFile(imageFile);
         petResponseDTO.setFileName(petRequestDTO.getFileName());
