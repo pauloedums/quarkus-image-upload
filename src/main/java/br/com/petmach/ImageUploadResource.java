@@ -81,17 +81,16 @@ public class ImageUploadResource {
 
 
     @GET
-    @Path("/download/{fileName}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response downloadFileByName(
-        @PathParam("fileName") String fileName) throws IOException {
+    @Path("/name/{fileName}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Long downloadFileByName(
+        @PathParam("fileName") String fileName){
 
-        PetRequestDTO petRequestDTO = petImageRepository.find("fileName", fileName).firstResult();
+        String fileNameWithoutSpace = fileName.replace(" ", "").trim();
         
-        return petImageRepository
-                .findByIdOptional(petRequestDTO.getId())
-                .map(pet -> Response.ok(petRequestDTO.getId()).build())
-                .orElse(Response.status(Status.NOT_FOUND).build());
+        PetRequestDTO petRequestDTO = petImageRepository.findByName(fileNameWithoutSpace);
+        
+        return petRequestDTO.getId();
     }
 
     @PUT

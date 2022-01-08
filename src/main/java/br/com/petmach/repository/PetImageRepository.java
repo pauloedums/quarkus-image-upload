@@ -7,5 +7,9 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 
 @ApplicationScoped
 public class PetImageRepository implements PanacheRepository<PetRequestDTO>{
+
+    public PetRequestDTO findByName(String fileName) {
+        return find("fileName", fileName).firstResult();
+    }
     
 }
