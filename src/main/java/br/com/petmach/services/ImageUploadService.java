@@ -6,6 +6,9 @@ import java.util.Base64;
 import java.util.zip.GZIPOutputStream;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.xml.bind.DatatypeConverter;
+
+import org.apache.commons.io.IOUtils;
 
 import br.com.petmach.model.PetRequestBody;
 import br.com.petmach.model.PetRequestDTO;
@@ -14,21 +17,24 @@ import br.com.petmach.model.PetResponseDTO;
 @ApplicationScoped
 public class ImageUploadService {
     
-    public PetResponseDTO createResponse(PetRequestDTO petRequestDTO) throws IOException{
+    public PetResponseDTO createResponse(PetRequestDTO petRequestDTO){
         
         PetResponseDTO petResponseDTO = new PetResponseDTO();
 
         // byte[] compressed = compress(petRequestDTO.getFile());
 
-        byte[] decoded = Base64.getDecoder().decode(petRequestDTO.getFile());
+        // byte[] decoded = Base64.getDecoder().decode();
 
-        String decodedAsIs = Base64.getUrlEncoder().encodeToString(decoded);
+        byte[] decodedAsIs = Base64.getUrlDecoder().decode(petRequestDTO.getFile());
 
-        // System.out.println(decoded);
 
+        String decoded = DatatypeConverter.printBase64Binary(decodedAsIs);
+
+        
         // String encodedMime = decoded.toString();
-        String imageFile = new String("data:image/"+ petRequestDTO.getFileExtension() +";base64," + decodedAsIs);
-
+        String imageFile = new String("data:image/"+ petRequestDTO.getFileExtension() +";base64," + decoded);
+        
+        System.out.println(imageFile);
         petResponseDTO.setId(petRequestDTO.getId());
         petResponseDTO.setFile(imageFile);
         petResponseDTO.setFileName(petRequestDTO.getFileName());
@@ -41,14 +47,19 @@ public class ImageUploadService {
 
         PetRequestDTO petRequestDTO = new PetRequestDTO();
 
-        byte[] fileContent = petRequestBody.getFile().readAllBytes();
-        byte[] encodedAsBytes = Base64.getEncoder().encode(fileContent);
+        try {
+          // byte[] fileContent = ;
+          byte[] compressed = IOUtils.toByteArray(petRequestBody.getFile());
+          byte[] encodedAsBytes = Base64.getUrlEncoder().encode(compressed);
+                    
+          petRequestDTO.setFile(encodedAsBytes);
+          petRequestDTO.setFileName(petRequestBody.getFileName());
+          petRequestDTO.setFileExtension(petRequestBody.getFileExtension());
+          
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
 
-        // byte[] compressed = compress(encodedAsBytes);
-                
-        petRequestDTO.setFile(encodedAsBytes);
-        petRequestDTO.setFileName(petRequestBody.getFileName());
-        petRequestDTO.setFileExtension(petRequestBody.getFileExtension());
 
         return petRequestDTO;
     }
