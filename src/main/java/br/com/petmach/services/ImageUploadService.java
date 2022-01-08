@@ -21,17 +21,10 @@ public class ImageUploadService {
         
         PetResponseDTO petResponseDTO = new PetResponseDTO();
 
-        // byte[] compressed = compress(petRequestDTO.getFile());
-
-        // byte[] decoded = Base64.getDecoder().decode();
-
         byte[] decodedAsIs = Base64.getUrlDecoder().decode(petRequestDTO.getFile());
-
 
         String decoded = DatatypeConverter.printBase64Binary(decodedAsIs);
 
-        
-        // String encodedMime = decoded.toString();
         String imageFile = new String("data:image/"+ petRequestDTO.getFileExtension() +";base64," + decoded);
         
         System.out.println(imageFile);
@@ -48,7 +41,6 @@ public class ImageUploadService {
         PetRequestDTO petRequestDTO = new PetRequestDTO();
 
         try {
-          // byte[] fileContent = ;
           byte[] compressed = IOUtils.toByteArray(petRequestBody.getFile());
           byte[] encodedAsBytes = Base64.getUrlEncoder().encode(compressed);
                     
@@ -59,7 +51,6 @@ public class ImageUploadService {
         } catch (Exception e) {
           e.printStackTrace();
         }
-
 
         return petRequestDTO;
     }
