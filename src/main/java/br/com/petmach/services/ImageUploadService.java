@@ -20,7 +20,7 @@ public class ImageUploadService {
 
         // byte[] compressed = compress(petRequestDTO.getFile());
 
-        String encodedMime = Base64.getEncoder().encodeToString(petRequestDTO.getFile());
+        String encodedMime = petRequestDTO.getFile().toString();
         String imageFile = new String("data:image/"+ petRequestDTO.getFileExtension() +";base64," + encodedMime);
 
         petResponseDTO.setId(petRequestDTO.getId());
