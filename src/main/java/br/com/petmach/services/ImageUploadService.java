@@ -20,12 +20,14 @@ public class ImageUploadService {
 
         // byte[] compressed = compress(petRequestDTO.getFile());
 
-        String decoded = Base64.getUrlEncoder().encodeToString(petRequestDTO.getFile());
+        byte[] decoded = Base64.getUrlDecoder().decode(petRequestDTO.getFile());
+
+        String decodedAsIs = Base64.getUrlEncoder().encodeToString(decoded);
 
         // System.out.println(decoded);
 
         // String encodedMime = decoded.toString();
-        String imageFile = new String("data:image/"+ petRequestDTO.getFileExtension() +";base64," + decoded);
+        String imageFile = new String("data:image/"+ petRequestDTO.getFileExtension() +";base64," + decodedAsIs);
 
         petResponseDTO.setId(petRequestDTO.getId());
         petResponseDTO.setFile(imageFile);
