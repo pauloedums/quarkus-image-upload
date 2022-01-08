@@ -79,6 +79,21 @@ public class ImageUploadResource {
                 .orElse(Response.status(Status.NOT_FOUND).build());
     }
 
+
+    @GET
+    @Path("/download/{fileName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response downloadFileByName(
+        @PathParam("fileName") String fileName) throws IOException {
+
+        PetRequestDTO petRequestDTO = petImageRepository.find("fileName", fileName).firstResult();
+        
+        return petImageRepository
+                .findByIdOptional(petRequestDTO.getId())
+                .map(pet -> Response.ok(petRequestDTO.getId()).build())
+                .orElse(Response.status(Status.NOT_FOUND).build());
+    }
+
     @PUT
     @Path("/update/{id}")
     @Produces(MediaType.APPLICATION_JSON)
