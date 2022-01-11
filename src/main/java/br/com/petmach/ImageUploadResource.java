@@ -2,6 +2,7 @@ package br.com.petmach;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -48,6 +49,10 @@ public class ImageUploadResource {
         @MultipartForm PetRequestBody petRequestBody) throws IOException {
         
         PetRequestDTO petRequestDTO = imageUploadService.createRequest(petRequestBody);
+
+        if(petImageRepository.isPersistent(petRequestDTO)){
+            petRequestDTO.setFileName(petRequestDTO.getFileName() + UUID.randomUUID());
+        }
 
         petImageRepository.persist(petRequestDTO);
         
