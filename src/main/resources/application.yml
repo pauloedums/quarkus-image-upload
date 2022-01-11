@@ -19,3 +19,9 @@ quarkus:
     password: ${JDBC_DATABASE_PASSWORD}
     jdbc:
       url: ${JDBC_DATABASE_URL}
+
+  
+  hibernate-orm:
+    database:
+      generation:
+        ~: update
