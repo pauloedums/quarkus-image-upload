@@ -10,7 +10,7 @@ quarkus:
   http:
     port: ${PORT:8080}
     cors: 
-      origins: https://www.petmatch.xyz, http://localhost:4200
+      origins: http://localhost:4200
       ~: true
   
   smallrye-openapi:

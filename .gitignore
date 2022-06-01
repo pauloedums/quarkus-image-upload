@@ -40,3 +40,6 @@ nb-configuration.xml
 
 # bash
 *.sh
+
+# heroku
+heroku.sh
